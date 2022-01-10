@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "openweathermap-productizer-v1"
+name = "country-productizer-v1"
 version = "1.0.0"
 description = ""
 authors = ["Digital Living International Ltd"]

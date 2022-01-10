@@ -1,7 +1,7 @@
-# Example Productizer
+# Productizer for Basic Country Data
 
-Implementation of a basic Productizer for the OpenWeatherMap API using Python and
-FastAPI. Serves as an example of how to implement a working Productizer.
+Implementation of a basic Productizer using Python and FastAPI. Serves as an example of
+how to implement a working Productizer.
 
 ## Running
 
@@ -9,8 +9,8 @@ The environment is dockerized, so this requires
 [Docker](https://docs.docker.com/install/) installed.
 
 ```bash
-docker build -t owm-productizer .
-docker run -p 8000:8000 --env=API_KEY=... --rm -it owm-productizer
+docker build -t productizer .
+docker run -p 8000:8000 --rm -it productizer
 ```
 
 ## Docs
