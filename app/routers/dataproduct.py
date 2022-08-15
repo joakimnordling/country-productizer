@@ -1,34 +1,22 @@
 from fastapi import APIRouter
+from fastapi.exceptions import HTTPException
 
-from app.models import CurrentWeatherMetricRequest, CurrentWeatherMetricResponse
-from app.openweathermap import get_current_weather
-from app.utils import logger
+from app.datasource import get_data
+from app.models import BasicCountryInfoRequest, BasicCountryInfoResponse
 
 router = APIRouter()
 
 
 @router.post(
-    "/draft/Weather/Current/Metric",
-    summary="draft/Weather/Current/Metric Data Product",
-    description="Current weather in metric units",
-    response_model=CurrentWeatherMetricResponse,
+    "/test/ioxio-dataspace-guides/Country/BasicInfo",
+    summary="Basic Country Info",
+    description="Data Product for basic country info",
+    response_model=BasicCountryInfoResponse,
 )
-async def weather_current_metric(params: CurrentWeatherMetricRequest):
+async def data_product(params: BasicCountryInfoRequest):
+    try:
+        data = await get_data(params.code)
+    except KeyError:
+        raise HTTPException(404, "Country not found")
 
-    result = await get_current_weather(params.lat, params.lon)
-
-    logger.info("Weather for %.2f, %.2f: %s", params.lat, params.lon, result)
-
-    # https://openweathermap.org/weather-conditions
-    main = result["weather"][0]["main"].lower()
-    rain = "rain" in main or "drizzle" in main or "sleet" in main
-
-    # https://openweathermap.org/current#current_JSON
-    return CurrentWeatherMetricResponse(
-        rain=rain,
-        temp=result["main"]["temp"] - 273.15,  # Kelvin to Celsius
-        pressure=result["main"]["pressure"],
-        humidity=result["main"]["humidity"],
-        wind_speed=result["wind"]["speed"],
-        wind_direction=result["wind"]["deg"],
-    )
+    return BasicCountryInfoResponse(**data)

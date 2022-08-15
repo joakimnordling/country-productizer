@@ -1,4 +1,6 @@
-from pydantic import BaseModel, Field
+from typing import List, Optional
+
+from pydantic import BaseModel, Field, constr
 from stringcase import camelcase
 
 
@@ -12,39 +14,71 @@ class HealthResponse(CamelCaseModel):
     status: bool
 
 
-class CurrentWeatherMetricRequest(CamelCaseModel):
+class BasicCountryInfoRequest(CamelCaseModel):
+    code: str = Field(
+        ...,
+        title="Code",
+        description="ISO 3166-1 alpha-2 code for the country",
+        example="FI",
+        min_length=2,
+        max_length=2,
+    )
+
+
+class Capital(CamelCaseModel):
+    name: str = Field(
+        ...,
+        title="Name",
+        description="The name of the capital of the Country",
+        example="Helsinki",
+    )
     lat: float = Field(
         ...,
         title="Latitude",
-        description="The latitude coordinate of the desired location",
+        description="The latitude coordinate of the Capital",
         ge=-90.0,
         le=90.0,
-        example=60.192059,
+        example=60.170833,
     )
     lon: float = Field(
         ...,
         title="Longitude",
-        description="The longitude coordinate of the desired location",
+        description="The longitude coordinate of the Capital",
         ge=-180.0,
         le=180.0,
-        example=24.945831,
+        example=24.9375,
     )
 
 
-class CurrentWeatherMetricResponse(CamelCaseModel):
-    humidity: float = Field(..., title="Current relative air humidity in %", example=72)
-    pressure: float = Field(..., title="Current air pressure in hPa", example=1007)
-    rain: bool = Field(
-        ..., title="Rain status", description="If it's currently raining or not."
-    )
-    temp: float = Field(
-        ..., title="Current temperature in Celsius", example=17.3, ge=-273.15
-    )
-    wind_speed: float = Field(..., title="Current wind speed in m/s", example=2.1, ge=0)
-    wind_direction: float = Field(
+class BasicCountryInfoResponse(CamelCaseModel):
+    code: str = Field(
         ...,
-        title="Current wind direction in meteorological wind direction degrees",
-        ge=0,
-        le=360,
-        example=220.0,
+        title="Code",
+        description="ISO 3166-1 alpha-2 code for the country",
+        example="FI",
+        min_length=2,
+        max_length=2,
+    )
+    name: str = Field(
+        ...,
+        title="Name",
+        description="The name of the country",
+        example="Finland",
+    )
+    area: float = Field(
+        ...,
+        title="Area",
+        description="The area of the country in km^2",
+        example=338455,
+    )
+    languages: List[constr(min_length=2, max_length=2)] = Field(
+        ...,
+        title="Official languages",
+        description="ISO 639-1 language codes for the official languages",
+        example=["fi", "sv"],
+    )
+    capital: Optional[Capital] = Field(
+        None,
+        title="Capital",
+        description="The capital of the country, legislative if multiple",
     )
