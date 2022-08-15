@@ -8,7 +8,7 @@ router = APIRouter()
 
 
 @router.post(
-    "/test/ioxio-nexus-guides/Country/BasicInfo",
+    "/test/ioxio-dataspace-guides/Country/BasicInfo",
     summary="Basic Country Info",
     description="Data Product for basic country info",
     response_model=BasicCountryInfoResponse,
